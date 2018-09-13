@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "a list of to do",
-  "main": "index.js",
+  "main": "./src/app.js",
   "scripts": {
     "build:weapp": "taro build --type weapp",
     "build:h5": "taro build --type h5",
