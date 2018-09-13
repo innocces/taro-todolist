@@ -1,0 +1,15 @@
+.at-tab-bar{
+  border: none!important;
+  padding-top: 0!important;
+}
+.tabs-pane--inactive{
+  height: auto!important;
+}
+.tabs-pane{
+  overflow: scroll
+}
+.tags_item .at-icon{
+  background-color: #fff!important;
+  position: relative;
+  z-index: 90;
+}
