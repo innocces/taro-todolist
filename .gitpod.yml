@@ -1,0 +1,12 @@
+tasks:
+  - name: dependencies
+    init: >
+      yarn
+      gp sync-done bundle
+  - name: dev server
+    init: gp sync-await bundle
+    command: yarn dev:h5
+
+ports:
+  - port: 10086
+    onOpen: open-preview

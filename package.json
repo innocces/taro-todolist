@@ -33,7 +33,7 @@
     "Android >= 4.1",
     "ios >= 8"
   ],
-  "author": "",
+  "author": "innocces",
   "dependencies": {
     "@babel/runtime": "^7.7.7",
     "@taroify/core": "^0.0.12-alpha.12",
@@ -41,6 +41,7 @@
     "@tarojs/react": "3.3.9",
     "@tarojs/runtime": "3.3.9",
     "@tarojs/taro": "3.3.9",
+    "classnames": "^2.3.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "taro-hooks": "latest"
@@ -62,5 +63,9 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "stylelint": "9.3.0",
     "typescript": "^4.1.0"
+  },
+  "repository": {
+    "url": "https://github.com/innocces/taro-todolist",
+    "type": "github"
   }
 }

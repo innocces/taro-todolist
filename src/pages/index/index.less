@@ -1,0 +1,89 @@
+@primary-color: #ee0a24;
+.todolist {
+  min-height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+
+  &-userinfo {
+    padding: 4px 24px;
+    background-color: white;
+    box-shadow: 0px 10px 30px 0px rgba(223, 223, 223, 0.43);
+  }
+
+  &-empty {
+    font-size: 300px;
+
+    &-normal {
+      font-size: 240px;
+      padding: 20px 0 40px;
+    }
+  }
+
+  &-gap {
+    margin: 30px auto;
+  }
+
+  &-adbutton {
+    position: fixed;
+    z-index: 99;
+    right: 24px;
+    bottom: 24px;
+  }
+
+  &-tabs {
+    position: relative;
+    height: 88px;
+    background-color: white;
+    font-size: 28rpx;
+
+    &::before {
+      display: block;
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      z-index: 1;
+      width: 80px;
+      height: 6px;
+      border-radius: 6px;
+      background-color: @primary-color;
+      left: ~'calc(25vw - 40px)';
+      transition: all 0.3s;
+    }
+
+    &-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    &.active::before {
+      left: ~'calc(75vw - 40px)';
+    }
+
+    &-panel {
+      width: 100%;
+      overflow-x: hidden;
+
+      &-wrap {
+        width: 200%;
+        display: flex;
+        flex-wrap: nowrap;
+        transform: translate(0, 0);
+        transition: all 0.5s;
+
+        &.active {
+          transform: translate(-50%, 0);
+        }
+      }
+
+      &-item {
+        flex: 1;
+      }
+    }
+  }
+
+  &-block {
+    height: 100%;
+  }
+}

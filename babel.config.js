@@ -3,30 +3,30 @@
 module.exports = {
   presets: [
     [
-      "taro",
+      'taro',
       {
-        framework: "react",
+        framework: 'react',
         ts: true,
       },
     ],
   ],
   plugins: [
     [
-      "import",
+      'import',
       {
-        libraryName: "@taroify/core",
-        libraryDirectory: "",
+        libraryName: '@taroify/core',
+        libraryDirectory: '',
         style: true,
       },
-      "@taroify/core",
+      '@taroify/core',
     ],
     [
-      "import",
+      'import',
       {
-        libraryName: "taro-hooks",
+        libraryName: 'taro-hooks',
         camel2DashComponentName: false,
       },
-      "taro-hooks",
+      'taro-hooks',
     ],
   ],
 };
