@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { View, Text, Ad } from '@tarojs/components';
-import { pxTransform } from '@tarojs/taro';
+import { ENV_TYPE, pxTransform, useShareAppMessage } from '@tarojs/taro';
 import {
   Button,
   NoticeBar,
@@ -15,11 +15,12 @@ import {
 } from '@taroify/core';
 import TipModal from '@/components/TipModal';
 import { IconEmpty } from '@components/Icon';
+import UpdateTip from '@/components/UpdateTip';
 
 import { LOCALKEY, USERINFO } from '@/constant';
 import { isEmpty } from '@/utils';
 
-import { useStorage, useUserInfo } from 'taro-hooks';
+import { useStorage, useUserInfo, useEnv } from 'taro-hooks';
 import classnames from 'classnames';
 import type { IUserInfo } from 'taro-hooks/es/useUserInfo';
 import type { ITodoListItem, IPrevDataSource, ITagListItem } from './type';
@@ -36,6 +37,7 @@ const TodoList = () => {
   const [userInfo, setUserInfo] = useState<IUserInfo>();
   const [userProfile, { getUserProfile }] = useUserInfo();
   const [{ storage }, { set }] = useStorage();
+  const env = useEnv();
 
   useEffect(() => {
     if (!isEmpty(storage)) {
@@ -84,6 +86,14 @@ const TodoList = () => {
     }
   }, [todoList]);
 
+  useShareAppMessage(() => {
+    return {
+      title: '快来记录你的第一个待办📅',
+      path: '/pages/index/index',
+      imageUrl: require('@/image/todolist-select.png'),
+    };
+  });
+
   console.log(storage, activeKey);
   return (
     <View className="todolist" ref={stickyContainer}>
@@ -92,30 +102,31 @@ const TodoList = () => {
           <NoticeBar.Icon>
             <Text className="iconfont icon-notice" />
           </NoticeBar.Icon>
-          本小程序的所有数据均存储与本地, 故请勿轻易移除小程序,
-          否则数据将会丢失!
+          本工具的所有数据均存储与本地, 故请勿轻易移除小程序, 否则数据将会丢失!
         </NoticeBar>
-        <Row className="todolist-userinfo" gutter={12} align="center">
-          <Col>
-            <Image
-              style={{
-                width: pxTransform(100),
-                height: pxTransform(100),
-              }}
-              round
-              lazyLoad
-              fallback
-              src={userInfo?.avatarUrl}
-            />
-          </Col>
-          <Col>
-            {userInfo?.nickName ? (
-              <Text className="taroify-ellipsis">{userInfo?.nickName}</Text>
-            ) : (
-              <Button onClick={handleGetUserInfo}>获取个人信息</Button>
-            )}
-          </Col>
-        </Row>
+        {ENV_TYPE.WEAPP === env && (
+          <Row className="todolist-userinfo" gutter={12} align="center">
+            <Col>
+              <Image
+                style={{
+                  width: pxTransform(100),
+                  height: pxTransform(100),
+                }}
+                round
+                lazyLoad
+                fallback
+                src={userInfo?.avatarUrl}
+              />
+            </Col>
+            <Col>
+              {userInfo?.nickName ? (
+                <Text className="taroify-ellipsis">{userInfo?.nickName}</Text>
+              ) : (
+                <Button onClick={handleGetUserInfo}>获取个人信息</Button>
+              )}
+            </Col>
+          </Row>
+        )}
         <Row
           align="center"
           className={classnames('todolist-tabs', { active: activeKey })}
@@ -182,22 +193,24 @@ const TodoList = () => {
           </View>
         </View>
       </View>
-
-      <Button
-        className="todolist-adbutton"
-        shape="circle"
-        size="small"
-        color="warning"
-        onClick={() => changeAdModalVisible(true)}
-      >
-        观看广告
-      </Button>
+      {!adModalVisible && env !== ENV_TYPE.WEB && (
+        <Button
+          className="flot-button"
+          shape="circle"
+          size="small"
+          color="warning"
+          onClick={() => changeAdModalVisible(true)}
+        >
+          观看广告
+        </Button>
+      )}
       <TipModal
         open={adModalVisible}
         onClose={() => changeAdModalVisible(false)}
       >
         <Ad unitId="adunit-7809e450e620082f" adIntervals={30} />
       </TipModal>
+      <UpdateTip />
     </View>
   );
 };

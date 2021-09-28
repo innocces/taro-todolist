@@ -1,4 +1,6 @@
+// eslint-disable-next-line import/no-commonjs
 const { resolve } = require('path');
+
 const config = {
   projectName: 'taro-todolist',
   date: '2021-9-25',
@@ -10,7 +12,7 @@ const config = {
     375: 2 / 1,
   },
   sourceRoot: 'src',
-  outputRoot: 'dist',
+  outputRoot: process.env.TARO_ENV === 'h5' ? 'dist-h5' : 'dist',
   plugins: [],
   defineConstants: {},
   alias: {
@@ -44,6 +46,7 @@ const config = {
     },
   },
   h5: {
+    esnextModules: ['@taroify/core'],
     publicPath: '/',
     staticDirectory: 'static',
     postcss: {

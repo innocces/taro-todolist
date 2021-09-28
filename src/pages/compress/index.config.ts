@@ -1,4 +1,4 @@
 export default {
-  navigationBarTitleText: '待办事项',
+  navigationBarTitleText: '压缩图片',
   enableShareAppMessage: true,
 };

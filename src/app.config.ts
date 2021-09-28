@@ -1,5 +1,5 @@
 export default {
-  pages: ['pages/index/index', 'pages/tool/index'],
+  pages: ['pages/index/index', 'pages/tool/index', 'pages/compress/index'],
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',
@@ -21,7 +21,7 @@ export default {
       },
       {
         pagePath: 'pages/tool/index',
-        text: '工具合集',
+        text: '工具箱',
         iconPath: './image/tools.png',
         selectedIconPath: './image/tools-select.png',
       },

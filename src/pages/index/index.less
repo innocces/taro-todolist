@@ -1,6 +1,6 @@
-@primary-color: #ee0a24;
+@import url(../../style/vars.less);
 .todolist {
-  min-height: 100vh;
+  min-height: ~'calc(100vh - 100px)';
   width: 100vw;
   overflow: hidden;
 
@@ -23,18 +23,11 @@
     margin: 30px auto;
   }
 
-  &-adbutton {
-    position: fixed;
-    z-index: 99;
-    right: 24px;
-    bottom: 24px;
-  }
-
   &-tabs {
     position: relative;
     height: 88px;
     background-color: white;
-    font-size: 28rpx;
+    font-size: 28px;
 
     &::before {
       display: block;

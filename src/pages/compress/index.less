@@ -1,0 +1,40 @@
+@import url(../../style/vars.less);
+.compress {
+  padding: @gap;
+
+  &-header {
+    border-radius: 20px;
+    padding: @gap;
+    margin-top: @gap;
+    background-color: #feebed;
+    font-size: @gap;
+    transition: background-color 0.5s;
+    &-icon {
+      width: 116px;
+      height: 100px;
+    }
+
+    &:active {
+      background-color: fade(@primary-color, 8%);
+    }
+  }
+
+  &-item {
+    height: 110px;
+    padding: @gap;
+    border-bottom: 1px solid fade(#eee, 50%);
+
+    &-img {
+      max-width: ~'calc(50vw - 24px)';
+      height: 110px;
+      text-align: center;
+      display: block;
+      margin: 0 auto;
+    }
+
+    &-col {
+      height: 100%;
+      overflow: hidden;
+    }
+  }
+}

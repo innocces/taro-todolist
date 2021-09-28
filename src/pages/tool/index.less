@@ -3,15 +3,24 @@
   overflow-x: hidden;
   &-item {
     box-sizing: border-box;
-    height: 88px;
     width: 100%;
-    padding: 0 24px;
-    line-height: 88px;
-    border-bottom: 1px solid fade(#eee, 20%);
+    margin: 12px 0;
+    display: flex;
+    align-items: center;
+    border-radius: 0;
+
+    &::before,
+    &::after {
+      border-left-width: 0;
+      border-right-width: 0;
+      border-top-width: 0;
+      border-radius: 0;
+    }
 
     &-icon {
       height: 78px;
       width: 78px;
+      margin-right: 24px;
     }
   }
 }
