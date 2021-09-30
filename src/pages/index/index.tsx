@@ -16,6 +16,7 @@ import {
 import TipModal from '@/components/TipModal';
 import { IconEmpty } from '@components/Icon';
 import UpdateTip from '@/components/UpdateTip';
+import EditeModal from '@/components/EditeModal';
 
 import { LOCALKEY, USERINFO } from '@/constant';
 import { isEmpty } from '@/utils';
@@ -23,7 +24,12 @@ import { isEmpty } from '@/utils';
 import { useStorage, useUserInfo, useEnv } from 'taro-hooks';
 import classnames from 'classnames';
 import type { IUserInfo } from 'taro-hooks/es/useUserInfo';
-import type { ITodoListItem, IPrevDataSource, ITagListItem } from './type';
+import type {
+  ITodoListItem,
+  IPrevDataSource,
+  ITagListItem,
+  TInfo,
+} from './type';
 
 import './index.less';
 
@@ -31,26 +37,55 @@ const TodoList = () => {
   const [adModalVisible, changeAdModalVisible] = useState<boolean>(false);
   const stickyContainer = useRef<Element>();
   const [activeKey, setActiveKey] = useState<number>(0);
-  const [todoList, setTodoList] = useState<(ITodoListItem | ITagListItem)[]>(
-    [],
-  );
+  const [todoList, setTodoList] = useState<TInfo[]>([]);
+  const [chooseItem, setChooseItem] = useState<TInfo>();
+  const [editeVisible, setEditVisible] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<IUserInfo>();
   const [userProfile, { getUserProfile }] = useUserInfo();
   const [{ storage }, { set }] = useStorage();
   const env = useEnv();
 
+  const generateTodoList = useCallback(
+    (localList: ITodoListItem[] | IPrevDataSource) => {
+      if (Array.isArray(localList)) {
+        setTodoList(localList);
+      } else {
+        // if prev, format and set
+        const { tags, list } = localList as IPrevDataSource;
+        const formatTodoList = [
+          ...tags.map((v, i) => ({
+            ...v,
+            type: 'tag',
+            id:
+              v.id ||
+              Math.ceil(Date.now() + Math.round(Math.random() * 100 * i)),
+          })),
+          ...list.map((v, i) => ({
+            ...v,
+            type: 'info',
+            id:
+              v.id ||
+              Math.ceil(Date.now() + Math.round(Math.random() * 100 * i)),
+          })),
+        ];
+        set(LOCALKEY, formatTodoList);
+      }
+    },
+    [set],
+  );
+
   useEffect(() => {
     if (!isEmpty(storage)) {
-      setTodoList(
+      generateTodoList(
         storage[LOCALKEY]
           ? typeof storage[LOCALKEY] === 'string'
             ? JSON.parse(storage[LOCALKEY])
-            : []
+            : storage[LOCALKEY]
           : [],
       );
       setUserInfo(storage[USERINFO]);
     }
-  }, [storage]);
+  }, [storage, generateTodoList]);
 
   useEffect(() => {
     if (userProfile?.nickName) {
@@ -64,26 +99,36 @@ const TodoList = () => {
     });
   }, [getUserProfile]);
 
-  const waitList = useMemo((): ITodoListItem[] => {
-    // 兼容一下以前的格式
-    if (Array.isArray(todoList)) {
-      return (
-        (todoList as ITodoListItem[]).filter((item) => item.type === 'todo') ||
-        []
+  const handleEdit = useCallback((chooseInfo?: TInfo) => {
+    setEditVisible(true);
+    setChooseItem(chooseInfo);
+  }, []);
+
+  const handleSave = useCallback(
+    (info: TInfo) => {
+      setTodoList(
+        todoList.map((v) => {
+          if (v.id === info.id) {
+            v = info;
+          }
+          return v;
+        }),
       );
-    } else {
-      return (todoList as IPrevDataSource).list || [];
-    }
+      setEditVisible(false);
+    },
+    [todoList],
+  );
+
+  const waitList = useMemo((): ITodoListItem[] => {
+    return (
+      (todoList as ITodoListItem[]).filter((item) => item.type === 'info') || []
+    );
   }, [todoList]);
 
   const tagList = useMemo((): ITagListItem[] => {
-    if (Array.isArray(todoList)) {
-      return (
-        (todoList as ITagListItem[]).filter((item) => item.type === 'tag') || []
-      );
-    } else {
-      return (todoList as IPrevDataSource).tags || [];
-    }
+    return (
+      (todoList as ITagListItem[]).filter((item) => item.type === 'tag') || []
+    );
   }, [todoList]);
 
   useShareAppMessage(() => {
@@ -93,6 +138,8 @@ const TodoList = () => {
       imageUrl: require('@/image/todolist-select.png'),
     };
   });
+
+  console.log(todoList);
 
   console.log(storage, activeKey);
   return (
@@ -157,8 +204,13 @@ const TodoList = () => {
         >
           <View className="todolist-tabs-panel-item">
             {waitList.length ? (
-              waitList.map(({ description, status, id }) => (
-                <Cell clickable key={id} title={description}>
+              waitList.map(({ description, status, id }, index) => (
+                <Cell
+                  clickable
+                  key={id}
+                  title={description}
+                  onClick={() => handleEdit(waitList[index])}
+                >
                   <Checkbox checked={status} onChange={console.log} />
                 </Cell>
               ))
@@ -211,6 +263,12 @@ const TodoList = () => {
         <Ad unitId="adunit-7809e450e620082f" adIntervals={30} />
       </TipModal>
       <UpdateTip />
+      <EditeModal
+        open={editeVisible}
+        info={chooseItem}
+        onClose={() => setEditVisible(false)}
+        onSave={handleSave}
+      />
     </View>
   );
 };

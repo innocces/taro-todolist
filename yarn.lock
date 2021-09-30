@@ -9730,10 +9730,10 @@ taro-css-to-react-native@3.3.9:
     css-mediaquery "^0.1.2"
     postcss-value-parser "^3.3.0"
 
-taro-hooks@latest:
-  version "1.4.1"
-  resolved "https://registry.npmmirror.com/taro-hooks/download/taro-hooks-1.4.1.tgz#118a2fb11c98dd64ce09199c713ecf5a8b8d4628"
-  integrity sha1-EYovsRyY3WTOCRmccT7PWouNRig=
+taro-hooks@^1.4.6:
+  version "1.4.6"
+  resolved "https://registry.npmmirror.com/taro-hooks/download/taro-hooks-1.4.6.tgz#af6827a99e69d0dc59c48fcabb4f15652a9b0847"
+  integrity sha1-r2gnqZ5p0NxZxI/Ku08VZSqbCEc=
   dependencies:
     "@babel/runtime" "^7.14.6"
     compressorjs "^1.0.7"

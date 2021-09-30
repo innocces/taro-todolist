@@ -3,7 +3,7 @@ export interface ITodoListItem {
   description: string;
   time: string;
   status: boolean;
-  type: 'tag' | 'todo';
+  type: 'tag' | 'info';
 }
 
 export interface ITagListItem {
@@ -11,10 +11,12 @@ export interface ITagListItem {
   description: string;
   time: string;
   title: string;
-  type: 'tag' | 'todo';
+  type: 'tag' | 'info';
 }
 
 export interface IPrevDataSource {
   tags: ITagListItem[];
   list: ITodoListItem[];
 }
+
+export type TInfo = ITagListItem | ITodoListItem;
