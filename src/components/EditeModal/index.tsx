@@ -1,9 +1,11 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import Modal, { ITipModalProps } from '@/components/TipModal';
 import { BaseEventOrig, View } from '@tarojs/components';
-import { Field, Button } from '@taroify/core';
+import { Field, Button, Cell } from '@taroify/core';
 import type { ITagListItem, ITodoListItem } from '@/pages/index/type';
 import type { InputProps } from '@tarojs/components/types/Input';
+
+import { getDate } from '@/utils';
 
 import './index.less';
 
@@ -37,6 +39,7 @@ const EditeModal: FC<IEditeModalProps> = ({ info, onSave, ...props }) => {
   return (
     <Modal {...props} placement="bottom">
       <View className="tip">
+        <Cell title="历史操作时间">{info?.time || getDate()}</Cell>
         {info && info.type === 'tag' ? (
           <Field
             label="标题"

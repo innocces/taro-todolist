@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { View, Text, Ad } from '@tarojs/components';
+import { View, Text, Ad, ITouchEvent } from '@tarojs/components';
 import { ENV_TYPE, pxTransform, useShareAppMessage } from '@tarojs/taro';
 import {
   Button,
@@ -9,19 +9,25 @@ import {
   Row,
   Col,
   Empty,
-  Checkbox,
   Cell,
   Collapse,
+  SwipeCell,
 } from '@taroify/core';
 import TipModal from '@/components/TipModal';
 import { IconEmpty } from '@components/Icon';
 import UpdateTip from '@/components/UpdateTip';
 import EditeModal from '@/components/EditeModal';
 
-import { LOCALKEY, USERINFO } from '@/constant';
-import { isEmpty } from '@/utils';
+import { LOCALKEY, USERINFO, MODALCONFIG } from '@/constant';
+import { isEmpty, getDate } from '@/utils';
 
-import { useStorage, useUserInfo, useEnv } from 'taro-hooks';
+import {
+  useStorage,
+  useUserInfo,
+  useEnv,
+  useModal,
+  useToast,
+} from 'taro-hooks';
 import classnames from 'classnames';
 import type { IUserInfo } from 'taro-hooks/es/useUserInfo';
 import type {
@@ -43,6 +49,8 @@ const TodoList = () => {
   const [userInfo, setUserInfo] = useState<IUserInfo>();
   const [userProfile, { getUserProfile }] = useUserInfo();
   const [{ storage }, { set }] = useStorage();
+  const [showModal] = useModal({ ...MODALCONFIG, title: '操作提示' });
+  const [showToast] = useToast({ mask: true, icon: 'none' });
   const env = useEnv();
 
   const generateTodoList = useCallback(
@@ -99,24 +107,43 @@ const TodoList = () => {
     });
   }, [getUserProfile]);
 
-  const handleEdit = useCallback((chooseInfo?: TInfo) => {
+  const handleEdit = useCallback(($event: ITouchEvent, chooseInfo?: TInfo) => {
+    $event.preventDefault();
     setEditVisible(true);
     setChooseItem(chooseInfo);
   }, []);
 
   const handleSave = useCallback(
     (info: TInfo) => {
-      setTodoList(
+      set(
+        LOCALKEY,
         todoList.map((v) => {
           if (v.id === info.id) {
-            v = info;
+            v = { ...info, time: getDate() };
           }
           return v;
         }),
       );
       setEditVisible(false);
+      showToast({ title: '保存成功!' });
     },
-    [todoList],
+    [todoList, set, showToast],
+  );
+
+  const handleDelete = useCallback(
+    (id: number) => {
+      showModal({ content: '确认删除此条待办信息?' }).then((res) => {
+        let content = '删除成功!';
+        if ((res as any).confirm) {
+          const filterTodoList = todoList.filter((v) => v.id !== id) || [];
+          set(LOCALKEY, filterTodoList);
+        } else {
+          content = '取消删除';
+        }
+        showToast({ title: content });
+      });
+    },
+    [todoList, set, showModal, showToast],
   );
 
   const waitList = useMemo((): ITodoListItem[] => {
@@ -141,7 +168,7 @@ const TodoList = () => {
 
   console.log(todoList);
 
-  console.log(storage, activeKey);
+  console.log(storage, activeKey, getDate());
   return (
     <View className="todolist" ref={stickyContainer}>
       <Sticky container={stickyContainer}>
@@ -205,14 +232,23 @@ const TodoList = () => {
           <View className="todolist-tabs-panel-item">
             {waitList.length ? (
               waitList.map(({ description, status, id }, index) => (
-                <Cell
-                  clickable
-                  key={id}
-                  title={description}
-                  onClick={() => handleEdit(waitList[index])}
-                >
-                  <Checkbox checked={status} onChange={console.log} />
-                </Cell>
+                <SwipeCell key={id} disabled={status}>
+                  <Cell
+                    clickable
+                    title={description}
+                    onClick={($event) => handleEdit($event, waitList[index])}
+                  />
+                  <SwipeCell.Actions side="right">
+                    <Button
+                      variant="contained"
+                      shape="square"
+                      color="danger"
+                      onClick={() => handleDelete(id)}
+                    >
+                      删除
+                    </Button>
+                  </SwipeCell.Actions>
+                </SwipeCell>
               ))
             ) : (
               <Empty>
