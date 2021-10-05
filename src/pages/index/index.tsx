@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { View, Text, Ad, ITouchEvent } from '@tarojs/components';
 import { ENV_TYPE, pxTransform, useShareAppMessage } from '@tarojs/taro';
 import {
-  Button,
   NoticeBar,
   Sticky,
   Image,
@@ -14,13 +13,14 @@ import {
   SwipeCell,
   Switch,
 } from '@taroify/core';
+import Button from '@/components/Button';
 import TipModal from '@/components/TipModal';
 import { IconEmpty } from '@components/Icon';
 import UpdateTip from '@/components/UpdateTip';
 import EditeModal from '@/components/EditeModal';
 
 import { LOCALKEY, USERINFO, MODALCONFIG } from '@/constant';
-import { isEmpty, getDate } from '@/utils';
+import { isEmpty, getDate, uuid } from '@/utils';
 
 import {
   useStorage,
@@ -66,16 +66,12 @@ const TodoList = () => {
           ...tags.map((v, i) => ({
             ...v,
             type: 'tag',
-            id:
-              v.id ||
-              Math.ceil(Date.now() + Math.round(Math.random() * 100 * i)),
+            id: v.id || uuid(i),
           })),
           ...list.map((v, i) => ({
             ...v,
             type: 'info',
-            id:
-              v.id ||
-              Math.ceil(Date.now() + Math.round(Math.random() * 100 * i)),
+            id: v.id || uuid(i),
           })),
         ];
         set(LOCALKEY, formatTodoList);
@@ -109,22 +105,37 @@ const TodoList = () => {
     });
   }, [getUserProfile]);
 
-  const handleEdit = useCallback(($event: ITouchEvent, chooseInfo?: TInfo) => {
-    $event.preventDefault();
-    setEditVisible(true);
-    setChooseItem(chooseInfo);
-  }, []);
+  const handleEdit = useCallback(
+    ($event: ITouchEvent, chooseInfo?: TInfo) => {
+      $event.preventDefault();
+      setEditVisible(true);
+      if (!chooseInfo) {
+        chooseInfo = {
+          id: uuid(1),
+          description: '',
+          time: getDate(),
+          status: false,
+          type: activeKey === 0 ? 'info' : 'tag',
+        };
+      }
+      setChooseItem(chooseInfo);
+    },
+    [activeKey],
+  );
 
   const handleSave = useCallback(
     (info: TInfo) => {
+      const exit = todoList.find((v) => v.id === info.id);
       set(
         LOCALKEY,
-        todoList.map((v) => {
-          if (v.id === info.id) {
-            v = { ...info, time: getDate() };
-          }
-          return v;
-        }),
+        exit
+          ? todoList.map((v) => {
+              if (v.id === info.id) {
+                v = { ...info, time: getDate() };
+              }
+              return v;
+            })
+          : [...todoList, info],
       );
       setEditVisible(false);
       showToast({ title: '保存成功!' });
@@ -294,7 +305,11 @@ const TodoList = () => {
               <Empty>
                 <IconEmpty single className="todolist-empty" />
                 <Empty.Description>暂无待办内容</Empty.Description>
-                <Button color="danger" className="todolist-gap">
+                <Button
+                  color="danger"
+                  className="todolist-gap"
+                  onClick={($event) => handleEdit($event)}
+                >
                   添加你的第一个待办!
                 </Button>
               </Empty>
@@ -310,16 +325,20 @@ const TodoList = () => {
                   setTagActiveId(accordionId);
                 }}
               >
-                {tagList.map(({ description, id }) => (
-                  <Collapse.Item title={description} key={String(id)}>
+                {tagList.map(({ description, id, title }, index) => (
+                  <Collapse.Item title={title || description} key={String(id)}>
                     <SwipeCell key={id}>
-                      <Cell>{description}</Cell>
+                      <Text className="todolist-tabs-panel-item-inner">
+                        {description}
+                      </Text>
                       <SwipeCell.Actions side="right">
                         <Button
                           variant="contained"
                           shape="square"
                           color="info"
-                          onClick={() => handleStatus(id)}
+                          onClick={($event) =>
+                            handleEdit($event, tagList[index])
+                          }
                         >
                           编辑
                         </Button>
@@ -340,7 +359,11 @@ const TodoList = () => {
               <Empty>
                 <IconEmpty className="todolist-empty-normal" />
                 <Empty.Description>暂无备忘内容</Empty.Description>
-                <Button color="danger" className="todolist-gap">
+                <Button
+                  color="danger"
+                  className="todolist-gap"
+                  onClick={($event) => handleEdit($event)}
+                >
                   添加你的第一个备忘!
                 </Button>
               </Empty>
@@ -348,6 +371,19 @@ const TodoList = () => {
           </View>
         </View>
       </View>
+      <Button
+        shape="circle"
+        size="small"
+        color="danger"
+        className={classnames('flot-button', 'todolist-flot', {
+          'todolist-flot-active':
+            (activeKey === 0 && waitList.length) ||
+            (activeKey === 1 && tagList.length),
+        })}
+        onClick={($event) => handleEdit($event)}
+      >
+        新建{activeKey === 0 ? '待办' : '备忘'}
+      </Button>
       {!adModalVisible && env !== ENV_TYPE.WEB && (
         <Button
           className="flot-button"

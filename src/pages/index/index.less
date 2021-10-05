@@ -77,11 +77,25 @@
           color: @disable-color;
           text-decoration: line-through;
         }
+
+        &-inner {
+          word-break: break-all;
+        }
       }
     }
   }
 
   &-block {
     height: 100%;
+  }
+
+  &-flot {
+    &-active {
+      display: block;
+    }
+    left: 50%;
+    width: 200px;
+    transform: translateX(-50%);
+    display: none;
   }
 }

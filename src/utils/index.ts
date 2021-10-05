@@ -15,3 +15,6 @@ export const getDate = (): string => {
   const second = now.getSeconds();
   return `${year}/${month}/${day} ${hour}:${min}:${second}`;
 };
+
+export const uuid = (i: number): number =>
+  Math.ceil(Date.now() + Math.round(Math.random() * 100 * i));

@@ -1,7 +1,8 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import Modal, { ITipModalProps } from '@/components/TipModal';
 import { BaseEventOrig, View } from '@tarojs/components';
-import { Field, Button, Cell } from '@taroify/core';
+import { Field, Cell } from '@taroify/core';
+import Button from '@components/Button';
 import type { ITagListItem, ITodoListItem } from '@/pages/index/type';
 import type { InputProps } from '@tarojs/components/types/Input';
 
@@ -43,7 +44,7 @@ const EditeModal: FC<IEditeModalProps> = ({ info, onSave, ...props }) => {
         {info && info.type === 'tag' ? (
           <Field
             label="标题"
-            value={(editorInfo as ITagListItem).title}
+            value={(editorInfo as ITagListItem).title || editorInfo.description}
             onChange={($e) => handleFieldChange('title', $e)}
           />
         ) : null}
