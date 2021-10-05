@@ -12,6 +12,7 @@ import {
   Cell,
   Collapse,
   SwipeCell,
+  Switch,
 } from '@taroify/core';
 import TipModal from '@/components/TipModal';
 import { IconEmpty } from '@components/Icon';
@@ -43,6 +44,7 @@ const TodoList = () => {
   const [adModalVisible, changeAdModalVisible] = useState<boolean>(false);
   const stickyContainer = useRef<Element>();
   const [activeKey, setActiveKey] = useState<number>(0);
+  const [tagActiveId, setTagActiveId] = useState<string>();
   const [todoList, setTodoList] = useState<TInfo[]>([]);
   const [chooseItem, setChooseItem] = useState<TInfo>();
   const [editeVisible, setEditVisible] = useState<boolean>(false);
@@ -146,6 +148,28 @@ const TodoList = () => {
     [todoList, set, showModal, showToast],
   );
 
+  const handleStatus = useCallback(
+    (id: number) => {
+      showModal({ content: '确认是否完成此条事项?' }).then((res) => {
+        let content = '恭喜您完成事项, 坚持完成剩下的事项吧!';
+        if ((res as any).confirm) {
+          set(
+            LOCALKEY,
+            todoList.map((v) => ({
+              ...v,
+              status: v.id === id ? true : (v as ITodoListItem).status,
+              time: getDate(),
+            })),
+          );
+        } else {
+          content = '取消操作';
+        }
+        showToast({ title: content });
+      });
+    },
+    [todoList, set, showModal, showToast],
+  );
+
   const waitList = useMemo((): ITodoListItem[] => {
     return (
       (todoList as ITodoListItem[]).filter((item) => item.type === 'info') || []
@@ -232,13 +256,29 @@ const TodoList = () => {
           <View className="todolist-tabs-panel-item">
             {waitList.length ? (
               waitList.map(({ description, status, id }, index) => (
-                <SwipeCell key={id} disabled={status}>
+                <SwipeCell key={id}>
                   <Cell
                     clickable
+                    className={classnames({
+                      ['todolist-tabs-panel-item-disable']: status,
+                    })}
                     title={description}
-                    onClick={($event) => handleEdit($event, waitList[index])}
-                  />
+                    onClick={($event) =>
+                      !status && handleEdit($event, waitList[index])
+                    }
+                  >
+                    {status && <Switch checked disabled size={14} />}
+                  </Cell>
                   <SwipeCell.Actions side="right">
+                    <Button
+                      variant="contained"
+                      shape="square"
+                      color="info"
+                      disabled={status}
+                      onClick={() => handleStatus(id)}
+                    >
+                      完成
+                    </Button>
                     <Button
                       variant="contained"
                       shape="square"
@@ -262,10 +302,37 @@ const TodoList = () => {
           </View>
           <View className="todolist-tabs-panel-item">
             {tagList.length ? (
-              <Collapse>
-                {tagList.map(({ title, description, id }) => (
-                  <Collapse.Item title={title} key={id}>
-                    {description}
+              <Collapse
+                accordion
+                activeKey={tagActiveId}
+                onChange={(accordionId: string) => {
+                  console.log(accordionId);
+                  setTagActiveId(accordionId);
+                }}
+              >
+                {tagList.map(({ description, id }) => (
+                  <Collapse.Item title={description} key={String(id)}>
+                    <SwipeCell key={id}>
+                      <Cell>{description}</Cell>
+                      <SwipeCell.Actions side="right">
+                        <Button
+                          variant="contained"
+                          shape="square"
+                          color="info"
+                          onClick={() => handleStatus(id)}
+                        >
+                          编辑
+                        </Button>
+                        <Button
+                          variant="contained"
+                          shape="square"
+                          color="danger"
+                          onClick={() => handleDelete(id)}
+                        >
+                          删除
+                        </Button>
+                      </SwipeCell.Actions>
+                    </SwipeCell>
                   </Collapse.Item>
                 ))}
               </Collapse>
