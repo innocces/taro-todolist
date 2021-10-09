@@ -5,7 +5,7 @@ tasks:
       gp sync-done bundle
   - name: dev server
     init: gp sync-await bundle
-    command: npm run dev:h5
+    command: npx @tarojs/cli@3.3.9 build --type h5 --watch
 
 ports:
   - port: 10086
