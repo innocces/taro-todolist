@@ -1,11 +1,11 @@
 tasks:
   - name: dependencies
     init: >
-      yarn
+      npm i
       gp sync-done bundle
   - name: dev server
     init: gp sync-await bundle
-    command: yarn dev:h5
+    command: npm run dev:h5
 
 ports:
   - port: 10086
