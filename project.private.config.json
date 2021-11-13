@@ -1,4 +1,5 @@
 {
+  "setting": {},
   "condition": {
     "plugin": {
       "list": []
@@ -16,6 +17,16 @@
           "pathName": "pages/compress/index",
           "query": "",
           "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/index/index",
+          "query": "",
+          "scene": 1037,
+          "referrerInfo": {
+            "appId": "wx15171eb44c7567ae",
+            "extraData": "{ \"from\": \"taro-hooks\" }"
+          }
         }
       ]
     }

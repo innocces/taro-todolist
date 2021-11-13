@@ -28,6 +28,8 @@ import {
   useEnv,
   useModal,
   useToast,
+  useLaunchOptions,
+  useRouter,
 } from 'taro-hooks';
 import classnames from 'classnames';
 import type { IUserInfo } from 'taro-hooks/es/useUserInfo';
@@ -36,6 +38,7 @@ import type {
   IPrevDataSource,
   ITagListItem,
   TInfo,
+  IReferInfo,
 } from './type';
 
 import './index.less';
@@ -53,7 +56,22 @@ const TodoList = () => {
   const [{ storage }, { set }] = useStorage();
   const [showModal] = useModal({ ...MODALCONFIG, title: '操作提示' });
   const [showToast] = useToast({ mask: true, icon: 'none' });
+  const [backButtonVisible, setBackButtonVisible] = useState<boolean>(false);
+  const [referInfo, setReferInfo] = useState<IReferInfo>();
   const env = useEnv();
+  const launchOptions = useLaunchOptions();
+  const [routerInfo, { navigateBack }] = useRouter();
+
+  useEffect(() => {
+    if (launchOptions && launchOptions.referrerInfo.appId) {
+      const { appId, extraData } = launchOptions.referrerInfo;
+      setBackButtonVisible(true);
+      setReferInfo({
+        from: appId,
+        ...extraData,
+      });
+    }
+  }, [launchOptions]);
 
   const generateTodoList = useCallback(
     (localList: ITodoListItem[] | IPrevDataSource) => {
@@ -125,6 +143,10 @@ const TodoList = () => {
 
   const handleSave = useCallback(
     (info: TInfo) => {
+      if (Object.values(info).some(Boolean)) {
+        showToast({ title: '尚有信息未添加' });
+        return;
+      }
       const exit = todoList.find((v) => v.id === info.id);
       set(
         LOCALKEY,
@@ -393,6 +415,17 @@ const TodoList = () => {
           onClick={() => changeAdModalVisible(true)}
         >
           观看广告
+        </Button>
+      )}
+      {env === ENV_TYPE.WEAPP && backButtonVisible && (
+        <Button
+          className="flot-button flot-button-left"
+          shape="circle"
+          size="small"
+          color="success"
+          onClick={() => navigateBack(true)}
+        >
+          返回{referInfo?.from}
         </Button>
       )}
       <TipModal

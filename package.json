@@ -36,7 +36,7 @@
   "author": "innocces",
   "dependencies": {
     "@babel/runtime": "^7.7.7",
-    "@taroify/core": "^0.0.12-alpha.17",
+    "@taroify/core": "^0.0.17-alpha.4",
     "@tarojs/components": "3.3.9",
     "@tarojs/react": "3.3.9",
     "@tarojs/runtime": "3.3.9",
@@ -44,7 +44,7 @@
     "classnames": "^2.3.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
-    "taro-hooks": "^1.4.6"
+    "taro-hooks": "^1.4.8"
   },
   "devDependencies": {
     "@babel/core": "^7.8.0",

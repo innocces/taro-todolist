@@ -1183,22 +1183,22 @@
   resolved "https://registry.npmmirror.com/@stencil/core/download/@stencil/core-2.4.0.tgz#17b45629c8986e35dcbce3f7dab7d64beede83f2"
   integrity sha1-F7RWKciYbjXcvOP32rfWS+7eg/I=
 
-"@taroify/core@^0.0.12-alpha.17":
-  version "0.0.12-alpha.17"
-  resolved "https://registry.npmmirror.com/@taroify/core/download/@taroify/core-0.0.12-alpha.17.tgz#bc5516d898f57b59bfa9093e57219b4b78686d84"
-  integrity sha1-vFUW2Jj1e1m/qQk+VyGbS3hobYQ=
+"@taroify/core@^0.0.17-alpha.4":
+  version "0.0.17-alpha.4"
+  resolved "https://registry.npmmirror.com/@taroify/core/download/@taroify/core-0.0.17-alpha.4.tgz#217324d7562502cf307b84988913a583c1dfd8eb"
+  integrity sha512-d1XYSF7/Tyvf3v9e6Uagf1LaP+d/UJymWvz/NYf5MqW0PpObRgOkTcSGuShmiF3wfhGiV+JhUMXvLnzoJ/SA2A==
   dependencies:
-    "@taroify/icons" "^0.0.12-alpha.17"
+    "@taroify/icons" "^0.0.17-alpha.4"
     classnames "^2.2.6"
     lodash "^4.17.21"
     raf "^3.4.1"
     react-is "^17.0.2"
     react-transition-group "^4.4.1"
 
-"@taroify/icons@^0.0.12-alpha.17":
-  version "0.0.12-alpha.17"
-  resolved "https://registry.npmmirror.com/@taroify/icons/download/@taroify/icons-0.0.12-alpha.17.tgz#02100065a114ecaf6d2014bc2516eeed4903b81e"
-  integrity sha1-AhAAZaEU7K9tIBS8JRbu7UkDuB4=
+"@taroify/icons@^0.0.17-alpha.4":
+  version "0.0.17-alpha.4"
+  resolved "https://registry.npmmirror.com/@taroify/icons/download/@taroify/icons-0.0.17-alpha.4.tgz#4ff56240cac906ab2e253d553f412fadf73e4261"
+  integrity sha512-s1Y6jNvQU3YbgUNLpy21DrU0S4Kas8xK4gWGIMQ98x+Vg/eEArr5vX6zFZX0GZbMfVBdkdL6QTK5x+ZZmAvWfQ==
   dependencies:
     classnames "^2.2.6"
 
@@ -9730,10 +9730,10 @@ taro-css-to-react-native@3.3.9:
     css-mediaquery "^0.1.2"
     postcss-value-parser "^3.3.0"
 
-taro-hooks@^1.4.6:
-  version "1.4.6"
-  resolved "https://registry.npmmirror.com/taro-hooks/download/taro-hooks-1.4.6.tgz#af6827a99e69d0dc59c48fcabb4f15652a9b0847"
-  integrity sha1-r2gnqZ5p0NxZxI/Ku08VZSqbCEc=
+taro-hooks@^1.4.8:
+  version "1.4.8"
+  resolved "https://registry.npmmirror.com/taro-hooks/download/taro-hooks-1.4.8.tgz#3411f83b9bee69f035c2732dcecb28d06c20241a"
+  integrity sha1-NBH4O5vuafA1wnMtzsso0GwgJBo=
   dependencies:
     "@babel/runtime" "^7.14.6"
     compressorjs "^1.0.7"

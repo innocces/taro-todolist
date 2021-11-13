@@ -20,3 +20,7 @@ export interface IPrevDataSource {
 }
 
 export type TInfo = ITagListItem | ITodoListItem;
+
+export interface IReferInfo {
+  from: string;
+}
