@@ -49,6 +49,9 @@ const config = {
     esnextModules: ['@taroify/core'],
     publicPath: '/',
     staticDirectory: 'static',
+    router: {
+      mode: 'browser'
+    },
     postcss: {
       autoprefixer: {
         enable: true,
